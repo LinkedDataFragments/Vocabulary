@@ -1,0 +1,133 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix ldf: <http://linkeddatafragments.org/vocab#>.
+@prefix void: <http://rdfs.org/ns/void#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+
+# Generic classes and properties
+
+ldf:Dataset rdfs:subClassOf void:Dataset;
+    rdfs:subClassOf ldf:Fragment;
+    ldf:selectorType ldf:Everything.
+
+ldf:Fragment a owl:Class.
+
+ldf:FragmentClass a owl:Class.
+
+# The way to fetch all data of a fragment:
+# - in the fragment's representation
+# - follow ldf:more until "no more"
+# - follow ldf:hasSubFragment
+ldf:hasSubFragment a rdf:Property;
+  rdfs:subPropertyOf void:subset;
+  rdfs:domain ldf:Fragment;
+  rdfs:range ldf:Fragment.
+
+ldf:isSubFragmentOf a rdf:Property;
+  rdfs:domain ldf:Fragment;
+  rdfs:range ldf:Fragment.
+
+# The semantics of this property should indicate inheritance of
+ldf:isAvailableAs a rdf:Property;
+    ldf:domain ldf:Dataset;
+    ldf:range rdf:FragmentClass.
+
+# ldf:hasPattern, ldf:optionalParameter, ldf:requiredParameter, ldf:hasQuery
+ldf:subFragmentClassOf a rdf:Property;
+    rdfs:subPropertyOf rdfs:subClassOf;
+    ldf:domain rdf:FragmentClass;
+    ldf:range rdf:FragmentClass.
+
+# Specific fragment types
+
+ldf:BasicLdf rdfs:subClassOf ldf:Fragment;
+    ldf:selectorType ldf:TriplePattern;
+    ldf:providesProperty void:triples.
+
+ldf:SubjectPage rdfs:subClassOf ldf:Fragment;
+    ldf:selectorType ldf:SubjectPattern.
+
+ldf:SparqlResult rdfs:subClassOf ldf:Fragment;
+    ldf:selectorType ldf:SparqlQuery.
+
+# Selector types
+
+ldf:Everything rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject ?predicate ?object }".
+
+ldf:TriplePattern rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject ?predicate ?object }";
+    ldf:optionalParameter "subject", "predicate", "object".
+
+ldf:SubjectPattern rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject ?predicate ?object }";
+    ldf:requiredParameter "subject".
+
+my:PersonPattern rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject a foaf:Person; foaf:name ?name }";
+    ldf:requiredParameter "name".
+
+my:TriplePatternWithLabel rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject ?predicate ?object }";
+    ldf:hasOptionalPattern "{ ?subject rdfs:label ?label. }";
+    # hasQuery is another way of achieving the above.
+    # The query can be generated using the above; the other way round is more difficult.
+    # The vocabulary enforces keeping this easy (but less powerful).
+    ldf:hasQuery "CONSTRUCT { ?subject ?predicate ?object; rdfs:label ?label } WHERE { ?subject ?predicate ?object. OPTIONAL { ?subject rdfs:label ?label. } }";
+    ldf:optionalParameter "subject", "predicate", "object".
+
+ldf:SparqlQuery rdfs:subClassOf ldf:Selector.
+
+ldf:BasicGraphPattern rdfs:subClassOf ldf:Selector.
+
+
+
+# Paging
+
+ldf:more
+  ldf:domain ldf:Fragment;
+  ldf:range ldf:Page.
+
+ldf:isPageOf
+    ldf:domain ldf:Page;
+    ldf:range ldf:Fragment.
+
+# ldf:more could also point to a dump?
+# Because the fragment could just be metadata for an existing dump.
+
+
+
+# Example
+
+
+
+:DBpedia a ldf:Dataset;
+    ldf:isAvailableAs [
+      ldf:subFragmentClassOf ldf:BasicLdf;
+      ldf:template "http://data.linkeddatafragments.org/dbpedia{?subject,predicate,object}"
+    ],
+    [
+      ldf:subFragmentClassOf ldf:SparqlQuery;
+      sd:endpoint <http://data.linkeddatafragments.org/sparql>
+    ];
+    void:triples 500000000;
+    ldf:template "http://data.linkeddatafragments.org/dbpedia";
+    void:dataDump <http://data.linkeddatafragments.org/dbpedia.ttl.gz>.
+
+:DBpedia a ldf:Dataset;
+    void:subset <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E>.
+
+<> ldf:isPageOf <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E>.
+
+<http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E> a ldf:Fragment, ldf:BasicLdf;
+    void:triples 16;
+    ldf:parameter [
+      ldf:name "subject";
+      ldf:value dbpedia:Alaric_I
+    ];
+    ldf:more <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E&page=2>.
