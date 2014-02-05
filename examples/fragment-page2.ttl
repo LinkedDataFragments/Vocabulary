@@ -1,0 +1,69 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix ldf: <http://linkeddatafragments.org/vocab#>.
+@prefix void: <http://rdfs.org/ns/void#>.
+@prefix hydra: <http://www.w3.org/ns/hydra/core#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix dbpedia: <http://dbpedia.org/resource/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+# Metadata
+
+<> ldf:isPageOf <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson>.
+
+<http://data.linkeddatafragments.org/dbpedia> a ldf:Dataset;
+    void:subset <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson>.
+
+<http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson> a ldf:Fragment, ldf:BasicLdf;
+    void:triples 831558;
+    ldf:parameter [
+      ldf:name "predicate";
+      ldf:value rdf:type
+    ],
+    [
+      ldf:name "object";
+      ldf:value foaf:Person
+    ];
+    ldf:more <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson&page=3>;
+    dcterms:title "A 'dbpedia' Linked Data Fragment"@en;
+    dcterms:description "Basic Linked Data Fragment of the 'dbpedia' dataset containing triples matching the pattern { ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> }."@en;
+    dcterms:source <http://data.linkeddatafragments.org/dbpedia>.
+
+# Controls (non-LDF-specific)
+
+<http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%253Atype&object=foaf%253APerson> a hydra:Collection, hydra:PagedCollection;
+    hydra:entrypoint <http://data.linkeddatafragments.org/dbpedia>;
+    hydra:totalItems 831558.
+
+<http://data.linkeddatafragments.org/dbpedia> a hydra:Collection;
+    hydra:search _:triplePattern.
+_:triplePattern hydra:template "http://data.linkeddatafragments.org/dbpedia{?subject,predicate,object}";
+    hydra:mappings _:subject, _:predicate, _:object.
+_:subject hydra:variable "subject";
+    hydra:property rdf:subject.
+_:predicate hydra:variable "predicate";
+    hydra:property rdf:predicate.
+_:object hydra:variable "object";
+    hydra:property rdf:object.
+
+rdf:type rdfs:seeAlso <http://data.linkeddatafragments.org/dbpedia?predicate=%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type%3E>,
+                      <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type%3E>,
+                      <http://data.linkeddatafragments.org/dbpedia?object=%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type%3E>.
+foaf:Person rdfs:seeAlso <http://data.linkeddatafragments.org/dbpedia?object=%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2FPerson%3E>,
+                         <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%3A%2F%2Fxmlns.com%2Ffoaf%2F0.1%2FPerson%3E>.
+<http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%253Atype&object=foaf%253APerson> dcterms:subject foaf:Person.
+<http://data.linkeddatafragments.org/dbpedia> void:classPartition <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%253Atype&object=foaf%253APerson>.
+<http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%253Atype&object=foaf%253APerson> void:class foaf:Person.
+
+# Data
+
+dbpedia:Albert_Einstein a foaf:Person.
+dbpedia:Alfred_Korzybski a foaf:Person.
+dbpedia:Alexander_the_Great a foaf:Person.
+dbpedia:Alfred_Hitchcock a foaf:Person.
+dbpedia:Attila a foaf:Person.
+dbpedia:Alfred_Nobel a foaf:Person.
+dbpedia:Alexander_Graham_Bell a foaf:Person.
+dbpedia:Andy_Warhol a foaf:Person.
+dbpedia:Alp_Arslan a foaf:Person.
+dbpedia:Akira_Kurosawa a foaf:Person.

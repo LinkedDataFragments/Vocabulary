@@ -66,26 +66,9 @@ ldf:SubjectPattern rdfs:subClassOf ldf:Selector;
     ldf:hasPattern "{ ?subject ?predicate ?object }";
     ldf:requiredParameter "subject".
 
-my:PersonPattern rdfs:subClassOf ldf:Selector;
-    rdfs:subClassOf ldf:BasicGraphPattern;
-    ldf:hasPattern "{ ?subject a foaf:Person; foaf:name ?name }";
-    ldf:requiredParameter "name".
-
-my:TriplePatternWithLabel rdfs:subClassOf ldf:Selector;
-    rdfs:subClassOf ldf:BasicGraphPattern;
-    ldf:hasPattern "{ ?subject ?predicate ?object }";
-    ldf:hasOptionalPattern "{ ?subject rdfs:label ?label. }";
-    # hasQuery is another way of achieving the above.
-    # The query can be generated using the above; the other way round is more difficult.
-    # The vocabulary enforces keeping this easy (but less powerful).
-    ldf:hasQuery "CONSTRUCT { ?subject ?predicate ?object; rdfs:label ?label } WHERE { ?subject ?predicate ?object. OPTIONAL { ?subject rdfs:label ?label. } }";
-    ldf:optionalParameter "subject", "predicate", "object".
-
 ldf:SparqlQuery rdfs:subClassOf ldf:Selector.
 
 ldf:BasicGraphPattern rdfs:subClassOf ldf:Selector.
-
-
 
 # Paging
 
@@ -99,35 +82,3 @@ ldf:isPageOf
 
 # ldf:more could also point to a dump?
 # Because the fragment could just be metadata for an existing dump.
-
-
-
-# Example
-
-
-
-:DBpedia a ldf:Dataset;
-    ldf:isAvailableAs [
-      ldf:subFragmentClassOf ldf:BasicLdf;
-      ldf:template "http://data.linkeddatafragments.org/dbpedia{?subject,predicate,object}"
-    ],
-    [
-      ldf:subFragmentClassOf ldf:SparqlQuery;
-      sd:endpoint <http://data.linkeddatafragments.org/sparql>
-    ];
-    void:triples 500000000;
-    ldf:template "http://data.linkeddatafragments.org/dbpedia";
-    void:dataDump <http://data.linkeddatafragments.org/dbpedia.ttl.gz>.
-
-:DBpedia a ldf:Dataset;
-    void:subset <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E>.
-
-<> ldf:isPageOf <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E>.
-
-<http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E> a ldf:Fragment, ldf:BasicLdf;
-    void:triples 16;
-    ldf:parameter [
-      ldf:name "subject";
-      ldf:value dbpedia:Alaric_I
-    ];
-    ldf:more <http://data.linkeddatafragments.org/dbpedia?subject=%3Chttp%253A%252F%252Fdbpedia.org%252Fresource%252FAlaric_I%3E&page=2>.

@@ -1,0 +1,16 @@
+@prefix ldf: <http://linkeddatafragments.org/vocab#>.
+@prefix void: <http://rdfs.org/ns/void#>.
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#>.
+
+:DBpedia a ldf:Dataset;
+    ldf:isAvailableAs [
+      ldf:subFragmentClassOf ldf:BasicLdf;
+      ldf:template "http://data.linkeddatafragments.org/dbpedia{?subject,predicate,object}"
+    ],
+    [
+      ldf:subFragmentClassOf ldf:SparqlQuery;
+      sd:endpoint <http://data.linkeddatafragments.org/sparql>
+    ];
+    void:triples 500000000;
+    ldf:template "http://data.linkeddatafragments.org/dbpedia";
+    void:dataDump <http://data.linkeddatafragments.org/dbpedia.ttl.gz>.

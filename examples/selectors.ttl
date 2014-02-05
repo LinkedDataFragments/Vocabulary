@@ -1,0 +1,18 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix ldf: <http://linkeddatafragments.org/vocab#>.
+@prefix my: <http://example.org/my#>.
+
+my:PersonPattern rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject a foaf:Person; foaf:name ?name }";
+    ldf:requiredParameter "name".
+
+my:TriplePatternWithLabel rdfs:subClassOf ldf:Selector;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject ?predicate ?object }";
+    ldf:hasOptionalPattern "{ ?subject rdfs:label ?label. }";
+    # hasQuery is another way of achieving the above.
+    # The query can be generated using the above; the other way round is more difficult.
+    # The vocabulary enforces keeping this easy (but less powerful).
+    ldf:hasQuery "CONSTRUCT { ?subject ?predicate ?object; rdfs:label ?label } WHERE { ?subject ?predicate ?object. OPTIONAL { ?subject rdfs:label ?label. } }";
+    ldf:optionalParameter "subject", "predicate", "object".
