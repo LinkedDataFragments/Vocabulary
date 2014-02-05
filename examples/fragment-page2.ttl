@@ -9,7 +9,7 @@
 
 # Metadata
 
-<> ldf:isPageOf <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson>.
+<> ldf:pageOf <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson>.
 
 <http://data.linkeddatafragments.org/dbpedia> a ldf:Dataset;
     void:subset <http://data.linkeddatafragments.org/dbpedia?subject=&predicate=rdf%3Atype&object=foaf%3APerson>.

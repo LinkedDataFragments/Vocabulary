@@ -26,11 +26,12 @@ ldf:Fragment a owl:Class;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
     rdfs:seeAlso ldf:Dataset.
 
-ldf:FragmentClass a owl:Class;
+ldf:FragmentClass a owl:Class, owl:Restriction;
     rdf:label "class of Linked Data Fragments"@en;
     rdfs:comment "A fragment class describes fragment instances that have specific additional properties."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    rdfs:seeAlso ldf:Fragment.
+    owl:onProperty rdf:type;
+    owl:hasValue ldf:Fragment.
 
 ldf:Page a owl:Class;
     rdf:label "Linked Data Fragment page"@en;
@@ -44,16 +45,18 @@ ldf:subFragment a rdf:Property;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
     rdfs:subPropertyOf void:subset;
     rdfs:domain ldf:Fragment;
-    rdfs:range ldf:Fragment.
+    rdfs:range ldf:Fragment;
+    owl:inverseOf ldf:subFragmentOf.
 
 ldf:subFragmentOf a rdf:Property;
     rdf:label "is a subfragment of"@en;
     rdfs:comment "The data in the subject fragment is a subset of the data in the object fragment."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
     rdfs:domain ldf:Fragment;
-    rdfs:range ldf:Fragment.
+    rdfs:range ldf:Fragment;
+    owl:inverseOf ldf:subFragment.
 
-ldf:isAvailableAs a rdf:Property;
+ldf:isAvailableAs a rdf:Property, owl:InverseFunctionalProperty;
     rdf:label "is available as"@en;
     rdfs:comment "All fragments of the given class are available for this dataset."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
@@ -68,6 +71,36 @@ ldf:subFragmentClassOf a rdf:Property;
     ldf:domain rdf:FragmentClass;
     ldf:range rdf:FragmentClass.
 
+ldf:more a rdf:Property;
+    rdf:label "has more data at"@en;
+    rdfs:comment "This representation does not contain all data in the fragment; more can be found at the specified location."@en;
+    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
+    ldf:domain ldf:Fragment;
+    # ldf:more might also be used for dumps. Does that make them pages?
+    ldf:range ldf:Page.
+    # Alternatively: (with ldf:DataDump a ldf:Fragment)
+    # ldf:range [ owl:unionOf (ldf:Page ldf:DataDump) ].
+
+ldf:page a rdf:Property, owl:InverseFunctionalProperty;
+    rdf:label "has page"@en;
+    rdfs:comment "The object is a page of the fragment."@en;
+    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
+    ldf:domain ldf:Fragment;
+    ldf:range ldf:Page;
+    # The difference with ldf:more is that ldf:page is inverse functional.
+    # The reason for this are data dumps; they might belong to multiple fragments.
+    # Maybe ldf:more shouldn't have ldf:Page as range?
+    rdfs:subPropertyOf ldf:more;
+    owl:inverseOf ldf:pageOf.
+
+ldf:pageOf a rdf:Property, owl:FunctionalProperty;
+    rdf:label "is a page of"@en;
+    rdfs:comment "The subject is a page of the fragment."@en;
+    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
+    ldf:domain ldf:Page;
+    ldf:range ldf:Fragment;
+    owl:inverseOf ldf:page.
+
 
 # Common fragment classes
 
@@ -75,6 +108,9 @@ ldf:BasicLdf rdfs:subClassOf ldf:Fragment;
     rdf:label "Basic Linked Data Fragment"@en;
     rdfs:comment "A Basic Linked Data Fragment has a triple pattern as selector, details count metadata, and provides controls towards any other Basic Linked Data Fragment of the same dataset."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
+    # Do we want this to be a property restriction instead?
+    # Then it would apply to individuals of this class and its subclasses,
+    # perhaps voiding the need for ldf:subFragmentClassOf.
     ldf:selectorType ldf:TriplePattern;
     ldf:providesProperty void:triples.
 
@@ -91,7 +127,7 @@ ldf:SparqlResult rdfs:subClassOf ldf:Fragment;
     ldf:selectorType ldf:SparqlQuery.
 
 
-# Selector classes
+# Common selector classes
 
 ldf:Everything rdfs:subClassOf ldf:Selector;
     rdf:label "everything"@en;
@@ -100,15 +136,7 @@ ldf:Everything rdfs:subClassOf ldf:Selector;
     rdfs:subClassOf ldf:BasicGraphPattern;
     ldf:hasPattern "{ ?subject ?predicate ?object }".
 
-ldf:TriplePattern rdfs:subClassOf ldf:Selector;
-    rdf:label "triple pattern"@en;
-    rdfs:comment "A triple pattern selector selects all items in a dataset that match a specific triple pattern."@en;
-    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    rdfs:subClassOf ldf:BasicGraphPattern;
-    ldf:hasPattern "{ ?subject ?predicate ?object }";
-    ldf:optionalParameter "subject", "predicate", "object".
-
-ldf:SubjectPattern rdfs:subClassOf ldf:Selector;
+ldf:SubjectPattern rdfs:subClassOf ldf:Selector, ldf:BasicGraphPattern;
     rdf:label "subject pattern"@en;
     rdfs:comment "A triple pattern selector selects all items in a dataset that have a specific subject."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
@@ -116,30 +144,20 @@ ldf:SubjectPattern rdfs:subClassOf ldf:Selector;
     ldf:hasPattern "{ ?subject ?predicate ?object }";
     ldf:requiredParameter "subject".
 
-ldf:SparqlQuery rdfs:subClassOf ldf:Selector;
-    rdf:label "SPARQL query"@en;
-    rdfs:comment "A SPARQL query selector selects all items in a dataset that match a specific SPARQL CONSTRUCT query."@en;
-    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>.
+ldf:TriplePattern rdfs:subClassOf ldf:Selector, ldf:BasicGraphPattern;
+    rdf:label "triple pattern"@en;
+    rdfs:comment "A triple pattern selector selects all items in a dataset that match a specific triple pattern."@en;
+    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
+    rdfs:subClassOf ldf:BasicGraphPattern;
+    ldf:hasPattern "{ ?subject ?predicate ?object }";
+    ldf:optionalParameter "subject", "predicate", "object".
 
 ldf:BasicGraphPattern rdfs:subClassOf ldf:Selector;
     rdf:label "basic graph pattern"@en;
     rdfs:comment "A basic graph pattern selects all items in a dataset that match a specific basic graph pattern."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>.
 
-
-# Paging
-
-ldf:more
-    rdf:label "has more data at"@en;
-    rdfs:comment "This representation does not contain all data in the fragment; more can be found at the specified location."@en;
-    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    ldf:domain ldf:Fragment;
-    # ldf:more might also be used for dumps. Does that make them pages?
-    ldf:range ldf:Page.
-
-ldf:isPageOf
-    rdf:label "is a page of"@en;
-    rdfs:comment "The subject is a page of the fragment."@en;
-    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    ldf:domain ldf:Page;
-    ldf:range ldf:Fragment.
+ldf:SparqlQuery rdfs:subClassOf ldf:Selector;
+    rdf:label "SPARQL query"@en;
+    rdfs:comment "A SPARQL query selector selects all items in a dataset that match a specific SPARQL CONSTRUCT query."@en;
+    rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>.
