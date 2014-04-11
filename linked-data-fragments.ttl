@@ -60,33 +60,33 @@ ldf:isAvailableAs a rdf:Property, owl:InverseFunctionalProperty;
     rdfs:label "is available as"@en;
     rdfs:comment "All fragments of the given class are available for this dataset."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    ldf:domain ldf:Dataset;
-    ldf:range rdf:FragmentClass.
+    rdfs:domain ldf:Dataset;
+    rdfs:range ldf:FragmentClass.
 
 ldf:subFragmentClassOf a rdf:Property;
     rdfs:label "is a sub-fragment-class of"@en;
     rdfs:comment "The subject fragment class is a specialization of the object fragment class, inheriting the latter's properties."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
     rdfs:subPropertyOf rdfs:subClassOf;
-    ldf:domain rdf:FragmentClass;
-    ldf:range rdf:FragmentClass.
+    rdfs:domain ldf:FragmentClass;
+    rdfs:range ldf:FragmentClass.
 
 ldf:more a rdf:Property;
     rdfs:label "has more data at"@en;
     rdfs:comment "This representation does not contain all data in the fragment; more can be found at the specified location."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    ldf:domain ldf:Fragment;
+    rdfs:domain ldf:Fragment;
     # ldf:more might also be used for dumps. Does that make them pages?
-    ldf:range ldf:Page.
+    rdfs:range ldf:Page.
     # Alternatively: (with ldf:DataDump a ldf:Fragment)
-    # ldf:range [ owl:unionOf (ldf:Page ldf:DataDump) ].
+    # rdfs:range [ owl:unionOf (ldf:Page ldf:DataDump) ].
 
 ldf:page a rdf:Property, owl:InverseFunctionalProperty;
     rdfs:label "has page"@en;
     rdfs:comment "The object is a page of the fragment."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    ldf:domain ldf:Fragment;
-    ldf:range ldf:Page;
+    rdfs:domain ldf:Fragment;
+    rdfs:range ldf:Page;
     # The difference with ldf:more is that ldf:page is inverse functional.
     # The reason for this are data dumps; they might belong to multiple fragments.
     # Maybe ldf:more shouldn't have ldf:Page as range?
@@ -97,8 +97,8 @@ ldf:pageOf a rdf:Property, owl:FunctionalProperty;
     rdfs:label "is a page of"@en;
     rdfs:comment "The subject is a page of the fragment."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
-    ldf:domain ldf:Page;
-    ldf:range ldf:Fragment;
+    rdfs:domain ldf:Page;
+    rdfs:range ldf:Fragment;
     owl:inverseOf ldf:page.
 
 
