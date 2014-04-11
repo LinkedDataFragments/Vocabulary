@@ -57,7 +57,7 @@ ldf:subFragmentOf a rdf:Property, owl:TransitiveProperty;
     rdfs:range ldf:Fragment;
     owl:inverseOf ldf:subFragment.
 
-ldf:isAvailableAs a rdf:Property, owl:InverseFunctionalProperty;
+ldf:isAvailableAs a rdf:Property;
     rdfs:label "is available as"@en;
     rdfs:comment "All fragments of the given class are available for this dataset."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
