@@ -24,6 +24,7 @@ ldf:Fragment a owl:Class;
     rdfs:label "Linked Data Fragment"@en;
     rdfs:comment "A fragment consists of all elements of a dataset that match a certain selector, together with their metadata and controls to retrieve related fragments."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
+    rdfs:subClassOf void:Dataset;
     rdfs:seeAlso ldf:Dataset.
 
 ldf:FragmentClass a owl:Class, owl:Restriction;
