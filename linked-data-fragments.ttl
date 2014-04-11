@@ -39,7 +39,7 @@ ldf:Page a owl:Class;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
     rdfs:seeAlso ldf:Fragment.
 
-ldf:subFragment a rdf:Property;
+ldf:subFragment a rdf:Property, owl:TransitiveProperty;
     rdfs:label "has subfragment"@en;
     rdfs:comment "The data in the object fragment is a subset of the data in the subject fragment."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
@@ -48,7 +48,7 @@ ldf:subFragment a rdf:Property;
     rdfs:range ldf:Fragment;
     owl:inverseOf ldf:subFragmentOf.
 
-ldf:subFragmentOf a rdf:Property;
+ldf:subFragmentOf a rdf:Property, owl:TransitiveProperty;
     rdfs:label "is a subfragment of"@en;
     rdfs:comment "The data in the subject fragment is a subset of the data in the object fragment."@en;
     rdfs:isDefinedBy <http://linkeddatafragments.org/vocab>;
